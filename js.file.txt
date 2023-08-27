@@ -1,0 +1,54 @@
+const previewButton = document.getElementById("previewButton");
+const previewSection = document.getElementById("preview");
+const downloadButton = document.getElementById("downloadButton");
+
+previewButton.addEventListener("click", () => {
+  const fullName = document.getElementById("fullName").value;
+  const address = document.getElementById("address").value;
+  const college = document.getElementById("college").value;
+  const image = document.getElementById("image").files[0];
+
+  const previewName = document.getElementById("previewName");
+  const previewAddress = document.getElementById("previewAddress");
+  const previewCollege = document.getElementById("previewCollege");
+  const previewImage = document.getElementById("previewImage");
+
+  previewName.textContent = "Name: " + fullName;
+  previewAddress.textContent = "Address: " + address;
+  previewCollege.textContent = "College: " + college;
+  previewImage.src = URL.createObjectURL(image);
+
+  previewSection.style.display = "block";
+});
+downloadButton.addEventListener("click", () => {
+  const card = document.querySelector(".card");
+  const canvas = document.createElement("canvas");
+  canvas.width = card.offsetWidth;
+  canvas.height = card.offsetHeight;
+  const ctx = canvas.getContext("2d");
+  
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  const logoImage = new Image();
+  logoImage.src = "lpulogo.jpeg"; // Update this path if needed
+  logoImage.onload = () => {
+    // Draw the uploaded image on the right side
+    ctx.drawImage(logoImage, 40, 20, 140, 50); // Adjust positioning and dimensions as needed
+ // Draw the uploaded image on the right side
+ ctx.drawImage(document.getElementById("previewImage"), canvas.width - 140, 20, 130, 150);
+    // Draw the text on the left side
+    ctx.fillStyle = "#000";
+    ctx.font = "16px Arial";
+    ctx.fillText(document.getElementById("previewName").textContent, 20, 100);
+    ctx.fillText(document.getElementById("previewAddress").textContent, 20, 130);
+    ctx.fillText(document.getElementById("previewCollege").textContent, 20, 160);
+
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = canvas.toDataURL("image/png");
+    a.download = "id_card.png";
+    a.click();
+    document.body.removeChild(a);
+  };
+});
